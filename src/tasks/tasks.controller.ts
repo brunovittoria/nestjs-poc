@@ -1,46 +1,22 @@
-import { Controller, Get, Param, Post } from '@nestjs/common';
+import { Controller, Get, Param, Body, Post } from '@nestjs/common';
+import { TasksService } from './tasks.service';
 
 @Controller('tasks')
 export class TasksController {
+  constructor(private readonly taskService: TasksService) {}
+
   @Get()
   getTasks() {
-    return [
-      {
-        id: 1,
-        title: 'Task 1',
-        description: 'Description 1',
-        done: false,
-      },
-
-      {
-        id: 2,
-        title: 'Task 2',
-        description: 'Description 2',
-        done: false,
-      },
-      {
-        id: 3,
-        title: 'Task 3',
-        description: 'Description 3',
-        done: false,
-      },
-    ];
+    return this.taskService.listAll();
   }
 
   @Get(':id')
-  getTaskById(@Param('id') id: number) {
-    return {
-      id,
-      title: 'Task 1',
-      description: 'Description 1',
-      done: true,
-    };
+  getTaskById(@Param('id') id: string) {
+    return this.taskService.findOne(id);
   }
 
-  @Post('/create-task')
-  createTask() {
-    return {
-      message: 'Task created successfully',
-    };
+  @Post()
+  createTask(@Body() body: any) {
+    return this.taskService.create(body);
   }
 }
