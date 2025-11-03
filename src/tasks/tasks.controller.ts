@@ -8,6 +8,7 @@ import {
   Patch,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
+import { Task } from './entities/task.entity';
 
 @Controller('tasks')
 export class TasksController {
@@ -29,7 +30,7 @@ export class TasksController {
   }
 
   @Patch(':id')
-  updateTask(@Param('id') id: string, @Body() body: any) {
+  updateTask(@Param('id') id: string, @Body() body: Task) {
     return this.taskService.update(id, body);
   }
 
