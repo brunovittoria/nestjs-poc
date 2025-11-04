@@ -54,6 +54,13 @@ export class TasksService {
   }
 
   delete(id: string) {
-    return `Deletada tarefa com id ${id}`;
+    const taskIndex = this.tasks.findIndex((task) => task.id === Number(id));
+
+    if (taskIndex < 0) {
+      throw new HttpException('Task not found', HttpStatus.NOT_FOUND);
+    }
+
+    this.tasks.splice(taskIndex, 1);
+    return `Task deleted successfully ${id}`;
   }
 }
