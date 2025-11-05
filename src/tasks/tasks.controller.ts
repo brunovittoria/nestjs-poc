@@ -6,9 +6,9 @@ import {
   Post,
   Delete,
   Patch,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import { Task } from './entities/task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 
@@ -22,7 +22,8 @@ export class TasksController {
   }
 
   @Get(':id')
-  getTaskById(@Param('id') id: string) {
+  getTaskById(@Param('id', ParseIntPipe) id: number) {
+    // ParseIntPipe é um pipe que transforma o id para um numero, caso nao seja um numero, ele vai retornar um erro 400.
     return this.taskService.findOne(id);
   }
 
@@ -32,12 +33,15 @@ export class TasksController {
   }
 
   @Patch(':id')
-  updateTask(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
+  updateTask(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateTaskDto: UpdateTaskDto,
+  ) {
     return this.taskService.update(id, updateTaskDto);
   }
 
   @Delete(':id')
-  deleteTask(@Param('id') id: string) {
+  deleteTask(@Param('id', ParseIntPipe) id: number) {
     return this.taskService.delete(id);
   }
 }

@@ -15,3 +15,9 @@
 21° Conhecendo PIPE, é parecido com o ZOD
 
 22° Melhorando DTO com partial type
+
+23° Transformando Dados com pipes
+
+## SECTION 4 - Usando PRISMA
+
+24°
