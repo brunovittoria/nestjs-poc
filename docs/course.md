@@ -13,4 +13,5 @@
 20° Criando DTO
 
 21° Conhecendo PIPE, é parecido com o ZOD
-PAREI NO 7:58
+
+22° Melhorando DTO com partial type
