@@ -34,34 +34,34 @@ export class TasksService {
   }
 
   create(createTaskDto: CreateTaskDto) {
-    const newId = this.tasks.length + 1;
-
-    const newTask = {
-      id: newId,
-      ...createTaskDto,
-      completed: false,
-    };
-
-    this.tasks.push(newTask);
+    const newTask = await this.prisma.task.create({
+      data: {
+        name: createTaskDto.name,
+        description: createTaskDto.description,
+        completed: false,
+      },
+    });
 
     return newTask;
   }
 
   update(id: number, updateTaskDto: UpdateTaskDto) {
-    const taskIndex = this.tasks.findIndex((task) => task.id === id);
+    const findTask = await this.prisma.task.findFirst({
+      where: {
+        id: id,
+      },
+    });
 
-    if (taskIndex < 0) {
+    if (!findTask) {
       throw new HttpException('Task not found', HttpStatus.NOT_FOUND);
     }
 
-    const taskItem = this.tasks[taskIndex];
+    const updatedTask = await this.prisma.task.update({
+      where: { id: id },
+      data: updateTaskDto, // Como nao sabemos quais campos serao atualizados ja q sao opcionais, vamos usar o updateTaskDto completo.
+    });
 
-    this.tasks[taskIndex] = {
-      ...taskItem,
-      ...updateTaskDto,
-    };
-
-    return `Task updated successfully ${taskItem.id}`;
+    return updatedTask;
   }
 
   delete(id: number) {
