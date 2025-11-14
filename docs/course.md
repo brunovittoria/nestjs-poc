@@ -20,4 +20,5 @@
 
 ## SECTION 4 - Usando PRISMA
 
-24°
+24° Instalando Prisma e config inicial
+https://www.prisma.io/docs/getting-started/setup-prisma/add-to-existing-project/relational-databases-typescript-postgresql
