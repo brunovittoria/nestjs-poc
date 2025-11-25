@@ -46,32 +46,47 @@ export class TasksService {
   }
 
   update(id: number, updateTaskDto: UpdateTaskDto) {
-    const findTask = await this.prisma.task.findFirst({
-      where: {
-        id: id,
-      },
-    });
+    try {
+      const findTask = await this.prisma.task.findFirst({
+        where: {
+          id: id,
+        },
+      });
 
-    if (!findTask) {
-      throw new HttpException('Task not found', HttpStatus.NOT_FOUND);
+      if (!findTask) {
+        throw new HttpException('Task not found', HttpStatus.NOT_FOUND);
+      }
+
+      const updatedTask = await this.prisma.task.update({
+        where: { id: id },
+        data: updateTaskDto, // Como nao sabemos quais campos serao atualizados ja q sao opcionais, vamos usar o updateTaskDto completo.
+      });
+
+      return updatedTask;
+    } catch (err) {
+      throw new HttpException('Error updating task', HttpStatus.BAD_REQUEST);
     }
-
-    const updatedTask = await this.prisma.task.update({
-      where: { id: id },
-      data: updateTaskDto, // Como nao sabemos quais campos serao atualizados ja q sao opcionais, vamos usar o updateTaskDto completo.
-    });
-
-    return updatedTask;
   }
 
-  delete(id: number) {
-    const taskIndex = this.tasks.findIndex((task) => task.id === id);
+  async delete(id: number) {
+    try {
+      const findTask = await this.prisma.task.findFirst({
+        where: {
+          id: id,
+        },
+      });
 
-    if (taskIndex < 0) {
-      throw new HttpException('Task not found', HttpStatus.NOT_FOUND);
+      if (!findTask) {
+        throw new HttpException('Task not found', HttpStatus.NOT_FOUND);
+      }
+
+      await this.prisma.task.delete({
+        where: { id: id },
+      });
+
+      return { message: 'Task deleted successfully' };
+    } catch (err) {
+      throw new HttpException('Error deleting task', HttpStatus.BAD_REQUEST);
     }
-
-    this.tasks.splice(taskIndex, 1);
-    return `Task deleted successfully ${id}`;
   }
 }
